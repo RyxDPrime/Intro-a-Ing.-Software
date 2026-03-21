@@ -1,0 +1,11 @@
+## Compilación
+bin/
+obj/
+
+## Visual Studio
+.vs/
+*.user
+*.suo
+
+## Claude Code
+.claude/

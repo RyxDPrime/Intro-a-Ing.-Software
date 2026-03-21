@@ -1,0 +1,118 @@
+<Window x:Class="AguaMinami.WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="clr-namespace:AguaMinami.WPF.Views"
+        Title="Agua Minami - Gestion de Ofertas" Height="780" Width="1150"
+        MinHeight="600" MinWidth="900"
+        WindowStartupLocation="CenterScreen" Loaded="Window_Loaded"
+        Background="{StaticResource BackgroundBrush}">
+
+    <Window.Resources>
+        <!-- Tab  -->
+        <Style TargetType="TabItem">
+            <Setter Property="Padding" Value="18,10"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="tabBorder" Padding="{TemplateBinding Padding}"
+                                Background="Transparent" BorderThickness="0,0,0,2"
+                                BorderBrush="Transparent" Margin="0,0,4,0">
+                            <ContentPresenter x:Name="contentPresenter"
+                                              ContentSource="Header"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="tabBorder" Property="BorderBrush" Value="{StaticResource PrimaryLightBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource PrimaryLightBrush}"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                    <Condition Property="IsSelected" Value="False"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="tabBorder" Property="BorderBrush" Value="#D0D5DD"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <DockPanel>
+        <!-- ─── Header profesional ─── -->
+        <Border DockPanel.Dock="Top" Padding="24,16">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0.3">
+                    <GradientStop Color="#0D47A1" Offset="0"/>
+                    <GradientStop Color="#1565C0" Offset="0.5"/>
+                    <GradientStop Color="#1976D2" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Grid>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="Agua Minami"
+                               Foreground="White" FontSize="22" FontWeight="Bold"
+                               VerticalAlignment="Center"/>
+                    <TextBlock Text="Modulo de Ofertas"
+                               Foreground="#B3D4FC" FontSize="12" FontWeight="Normal"
+                               Margin="0,2,0,0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ─── Footer ─── -->
+        <Border DockPanel.Dock="Bottom" Background="#F8F9FA" Padding="24,8"
+                BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0"/>
+
+        <!-- ─── Tabs CRUD ─── -->
+        <TabControl x:Name="MainTabs" Margin="0" Padding="0" BorderThickness="0" Background="Transparent"
+                    SelectionChanged="MainTabs_SelectionChanged">
+            <TabControl.Template>
+                <ControlTemplate TargetType="TabControl">
+                    <DockPanel>
+                        <!-- Barra de tabs -->
+                        <Border DockPanel.Dock="Top" Background="{StaticResource SurfaceBrush}"
+                                BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1"
+                                Padding="20,0">
+                            <TabPanel IsItemsHost="True" Margin="0,0,0,-1"/>
+                        </Border>
+                        <!-- Contenido -->
+                        <Border Background="{StaticResource BackgroundBrush}" Padding="20,16">
+                            <ContentPresenter ContentSource="SelectedContent"/>
+                        </Border>
+                    </DockPanel>
+                </ControlTemplate>
+            </TabControl.Template>
+
+            <TabItem Header="Ofertas">
+                <views:OfertaView DataContext="{Binding Ofertas}"/>
+            </TabItem>
+
+            <TabItem Header="Oferta x Cantidad">
+                <views:OfertaCantidadView DataContext="{Binding OfertasCantidad}"/>
+            </TabItem>
+
+            <TabItem Header="Oferta x Descuento">
+                <views:OfertaDescuentoView DataContext="{Binding OfertasDescuento}"/>
+            </TabItem>
+
+            <TabItem Header="Asignaciones">
+                <views:OfertaAsignacionView DataContext="{Binding OfertasAsignacion}"/>
+            </TabItem>
+
+            <TabItem Header="Variantes">
+                <views:VarianteOfertaView DataContext="{Binding VariantesOferta}"/>
+            </TabItem>
+
+        </TabControl>
+    </DockPanel>
+</Window>
