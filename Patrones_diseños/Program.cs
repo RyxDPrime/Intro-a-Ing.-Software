@@ -183,4 +183,27 @@ static async Task InicializarStockSiExisteAsync(WebApplication app)
     {
         await almacen.InicializarStockAsync();
     }
+    
 }
+
+// La factory es Singleton — el cache vive durante toda la vida del proceso
+builder.Services.AddSingleton<ProductoFlyweightFactory>();
+
+// Pre-cargar catálogo al arrancar (evita el primer hit de BD en producción)
+var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var factory = scope.ServiceProvider
+                       .GetRequiredService<ProductoFlyweightFactory>();
+    await factory.PrecargarCatalogoAsync();
+}
+
+// En producción usamos el adapter real; en desarrollo/test el offline.
+if (builder.Environment.IsProduction())
+    builder.Services.AddScoped<IComprobanteElectronico, DgiiLibreriaAdapter>();
+else
+    builder.Services.AddScoped<IComprobanteElectronico,
+                                ComprobanteElectronicoOfflineAdapter>();
+
+// Scoped: cada request tiene su propio registro cargado para ese cliente
+builder.Services.AddScoped<RegistroPlantillas>();
